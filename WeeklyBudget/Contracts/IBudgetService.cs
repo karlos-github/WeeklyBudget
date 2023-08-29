@@ -8,9 +8,9 @@ namespace WeeklyBudget.Contracts
         Task<List<Budget>> GetAllBudgetsAsync(bool trackChanges);
         Task<Budget?> GetByIdAsync(int id, bool trackChanges);
         //void CreateBudget(Budget budget);
-        Task<Budget?> GetActualBudgetAsync();
+        //Task<Budget?> GetActualBudgetAsync();
         Task<bool> ExistActualBudgetAsync();
-        Task<BudgetDto?> GetActualBudgetAsync1();
+        Task<BudgetDto> GetActualBudgetAsync();
         Task SaveBudgetDefinitionAsync(BudgetDefinitionDto budget);
     }
 }

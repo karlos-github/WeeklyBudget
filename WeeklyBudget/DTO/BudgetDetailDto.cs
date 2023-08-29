@@ -4,9 +4,8 @@ namespace WeeklyBudget.DTO
 {
     public class BudgetDetailDto
     {
-        //public DateTime BudgetDate { get; set; } = DateTime.MinValue;
-        public User User { get; set; }
-        public ExpenditureType ExpenditureType { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string ExpenditureTypeName { get; set; } = string.Empty;
         public decimal TotalBudget { get; set; } = default;
         public decimal LeftToSpentPercent { get; set; } = default;
         public decimal SpentPercent { get; set; } = default;
