@@ -7,7 +7,7 @@ namespace WeeklyBudget.Servicies
 {
     public class BudgetService : IBudgetService
     {
-        private const int _weeksPerMounth = 4;
+        const int _weeksPerMounth = 4;
         readonly IRepositoryManager _repositoryManager;
 
         public BudgetService(IRepositoryManager repositoryManager)
@@ -42,7 +42,7 @@ namespace WeeklyBudget.Servicies
                 3 => 25 - last day
             */
 
-            for (int week = 0; week < 4; week++)//each budget is divided into 4 groups, each group per 7 days (last group from 25th day to the end of the month)
+            for (int week = 0; week < _weeksPerMounth; week++)//each budget is divided into 4 groups, each group per 7 days (last group from 25th day to the end of the month)
             {
                 var details = new List<BudgetDetailDto>();
                 foreach (var expenditureType in allExpenditureTypes)
@@ -54,7 +54,7 @@ namespace WeeklyBudget.Servicies
                     {
                         ExpenditureType = expenditureType,
                         SpentAmount = budgetExpenditures?.Sum(_ => _.SpentAmount) ?? 0m,
-                        TotalBudget = budget.TotalBudget / 4,
+                        TotalBudget = budget.TotalBudget / _weeksPerMounth,
                     };
                     detail.SpentPercent = (budgetDetails is not null && budgetDetails!.TotalBudget != 0m) ? (detail.SpentAmount / budgetDetails?.TotalBudget ?? 0m) * 100 : 0m;
                     detail.LeftToSpentAmount = (budgetDetails is not null && budgetDetails!.TotalBudget != 0m) ? budgetDetails!.TotalBudget - detail.SpentAmount : 0m;
