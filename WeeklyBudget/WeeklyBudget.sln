@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeeklyBudget", "WeeklyBudget.csproj", "{9417975C-6194-4561-8B40-4152CB13CC0E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9417975C-6194-4561-8B40-4152CB13CC0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9417975C-6194-4561-8B40-4152CB13CC0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9417975C-6194-4561-8B40-4152CB13CC0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9417975C-6194-4561-8B40-4152CB13CC0E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E36B0CCF-06AA-4F8D-9214-C60C5D4BCDCA}
+	EndGlobalSection
+EndGlobal
