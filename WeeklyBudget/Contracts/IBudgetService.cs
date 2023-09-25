@@ -5,12 +5,7 @@ namespace WeeklyBudget.Contracts
 {
     public interface IBudgetService
     {
-        Task<List<Budget>> GetAllBudgetsAsync(bool trackChanges);
-        Task<Budget?> GetByIdAsync(int id, bool trackChanges);
-        //void CreateBudget(Budget budget);
-        //Task<Budget?> GetActualBudgetAsync();
-        Task<bool> ExistActualBudgetAsync();
-        Task<BudgetDto> GetActualBudgetAsync();
-        Task SaveBudgetDefinitionAsync(BudgetDefinitionDto budget);
-    }
+		Task<BudgetDto_> GetActualBudgetAsync_();
+		Task UpdateAsync(BudgetDefinitionDto budget);
+	}
 }

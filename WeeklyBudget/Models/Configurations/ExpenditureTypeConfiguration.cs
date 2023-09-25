@@ -10,17 +10,17 @@ namespace WeeklyBudget.Models.Configurations
             builder.HasData(
                 new ExpenditureType()
                 {
-                    Id = 1,
+                    ExpenditureTypeId = 1,
                     Name = "Sex",
                 },
                 new ExpenditureType()
                 {
-                    Id = 2,
+                    ExpenditureTypeId = 2,
                     Name = "Drogy",
                 },
                 new ExpenditureType()
                 {
-                    Id = 3,
+                    ExpenditureTypeId = 3,
                     Name = "Alcohol",
                 }
             );

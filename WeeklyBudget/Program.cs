@@ -25,8 +25,10 @@ namespace WeeklyBudget
             builder.Services.AddDbContext<WeeklyBudgetContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("WeeklyBudgetConnection")));
             builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
             builder.Services.AddScoped<IBudgetService, BudgetService>();
+			builder.Services.AddScoped<IExpenditureService, ExpenditureService>();
+			builder.Services.AddScoped<IExpenditureTypeService, ExpenditureTypeService>();
 
-            var app = builder.Build();
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

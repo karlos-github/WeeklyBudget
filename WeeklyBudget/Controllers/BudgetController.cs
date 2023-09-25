@@ -16,22 +16,13 @@ namespace WeeklyBudget.Controllers
             _budgetService = budgetService;
         }
 
-        [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll([FromQuery] bool deep = true) => Ok(await _budgetService.GetAllBudgetsAsync(deep));
-
-        [HttpGet("{id}/getById")]
-        public async Task<IActionResult> GetById(int id, [FromQuery] bool deep = true) => Ok(await _budgetService.GetByIdAsync(id, deep));
-
         [HttpGet("getCurrentBudget")]
-        public async Task<IActionResult> GetActualBudget() => Ok(await _budgetService.GetActualBudgetAsync());
-
-        [HttpGet("existCurrentBudget")]
-        public async Task<IActionResult> ExistCurrentBudget() => Ok(await _budgetService.ExistActualBudgetAsync());
+        public async Task<IActionResult> GetActualBudget() => Ok(await _budgetService.GetActualBudgetAsync_());
 
         [HttpPost("saveDefinition")]
-        public async Task<IActionResult> Save([FromBody] BudgetDefinitionDto budget)
+        public async Task<IActionResult> Update([FromBody] BudgetDefinitionDto budget)
         {
-            await _budgetService.SaveBudgetDefinitionAsync(budget);
+            await _budgetService.UpdateAsync(budget);
             return Ok();
         }
 

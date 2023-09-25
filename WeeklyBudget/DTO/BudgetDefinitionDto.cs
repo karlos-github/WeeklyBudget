@@ -2,8 +2,7 @@
 {
     public class BudgetDefinitionDto
     {
-        public DateTime BudgetDate { get; set; } = DateTime.MinValue;
         public decimal TotalBudget { get; set; } = default;
-        public List<BudgetDefinitionDetailDto>? BudgetDetails { get; set; }
+        public IEnumerable<BudgetDefinitionDetailDto>? BudgetDetails { get; set; } = new List<BudgetDefinitionDetailDto>();
     }
 }

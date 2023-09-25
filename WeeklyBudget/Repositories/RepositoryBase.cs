@@ -55,7 +55,5 @@ namespace WeeklyBudget.Repositories
             _budgetContext.Entry(entity).State = EntityState.Modified;
             _budgetContext.SaveChanges();
         }
-
-        //private Func<DateTime, bool> expr;
     }
 }

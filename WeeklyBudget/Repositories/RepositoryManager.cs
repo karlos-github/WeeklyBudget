@@ -8,7 +8,7 @@ namespace WeeklyBudget.Repositories
         readonly WeeklyBudgetContext _weeklyBudgetContext;
         IBudgetRepository _budgetRepository;
         IExpenditureTypeRepository _expenseTypeRepository;
-        IUserRepository _userRepository;
+        IExpenditureRepository _expenditureRepository;
 
         public RepositoryManager(WeeklyBudgetContext weeklyBudgetContext)
         {
@@ -17,8 +17,6 @@ namespace WeeklyBudget.Repositories
 
         public IBudgetRepository Budget => _budgetRepository ??= new BudgetRepository(_weeklyBudgetContext);
         public IExpenditureTypeRepository ExpenditureType => _expenseTypeRepository ??= new ExpenditureTypeRepository(_weeklyBudgetContext);
-        public IUserRepository User => _userRepository ??= new UserRepository(_weeklyBudgetContext);
-
-        public void Save() => _weeklyBudgetContext.SaveChanges();
+        public IExpenditureRepository ExpenditureRepository => _expenditureRepository ??= new ExpenditureRepository(_weeklyBudgetContext);
     }
 }

@@ -3,21 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WeeklyBudget.Models
 {
+    /// <summary>
+    /// Budget class represents a blue print for the planned total expenditure during certain month
+    /// </summary>
     public class Budget
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        [Column("BudgetId")]
-        public int Id { get; set; }
-
-        [Required]
+        public int BudgetId { get; set; }
         public DateTime BudgetDate { get; set; }
-
-        [Required]
         public decimal TotalBudget { get; set; } = default;
-
         public ICollection<BudgetDetail>? BudgetDetails { get; set; } = new List<BudgetDetail>();
-
-        public ICollection<Expenditure>? Expenditures { get; set; } = new List<Expenditure>();
     }
 }

@@ -4,8 +4,6 @@
     {
         IBudgetRepository Budget { get; }
         IExpenditureTypeRepository ExpenditureType { get; }
-        IUserRepository User { get; }
-        
-        void Save();
+		IExpenditureRepository ExpenditureRepository { get; }
     }
 }
