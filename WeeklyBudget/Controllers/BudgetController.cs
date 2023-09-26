@@ -11,10 +11,7 @@ namespace WeeklyBudget.Controllers
     {
         readonly IBudgetService _budgetService;
 
-        public BudgetController(IBudgetService budgetService)
-        {
-            _budgetService = budgetService;
-        }
+        public BudgetController(IBudgetService budgetService) => _budgetService = budgetService;
 
         [HttpGet("getCurrentBudget")]
         public async Task<IActionResult> GetActualBudget() => Ok(await _budgetService.GetActualBudgetAsync_());

@@ -12,10 +12,7 @@ namespace WeeklyBudget.Controllers
 	{
 		readonly IExpenditureTypeService _expenditureTypeService;
 
-		public ExpenditureTypeController(IExpenditureTypeService expenditureTypeService)
-		{
-			_expenditureTypeService = expenditureTypeService;
-		}
+		public ExpenditureTypeController(IExpenditureTypeService expenditureTypeService) => _expenditureTypeService = expenditureTypeService;
 
 		[HttpGet("getAll")]
 		public async Task<IActionResult> GetAll() => Ok(await _expenditureTypeService.GetAllAsync());
