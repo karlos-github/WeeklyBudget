@@ -27,7 +27,7 @@ namespace WeeklyBudget.Repositories
 				.Where(_ => _.SpentDate.Month == dateTime.Month)
 				.ToListAsync();
 
-		public async Task<Expenditure?> GetByIdAsync(int id) => await _budgetContext.Expenditures.FirstOrDefaultAsync(_ => _.ExpenditureTypeId == id);
+		public async Task<Expenditure?> GetByIdAsync(int id) => await _budgetContext.Expenditures.FirstOrDefaultAsync(_ => _.ExpenditureId == id);
 
 		public async Task<bool> SaveAsync(Expenditure dto)
 		{

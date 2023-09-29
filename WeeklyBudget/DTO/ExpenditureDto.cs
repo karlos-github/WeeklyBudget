@@ -6,5 +6,6 @@ namespace WeeklyBudget.DTO
 	{
 		public ExpenditureType ExpenditureType { get; set; } = new ExpenditureType();
 		public AmountDto? Amount { get; set; }
+		public int? ExpenditureId { get; set; }
 	}
 }

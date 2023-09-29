@@ -1,9 +1,8 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using WeeklyBudget.Contracts;
+﻿using WeeklyBudget.Contracts;
 using WeeklyBudget.DTO;
 using WeeklyBudget.Models;
 
-namespace WeeklyBudget.Servicies
+namespace WeeklyBudget.Service
 {
 	public class ExpenditureService : IExpenditureService
 	{
@@ -18,16 +17,6 @@ namespace WeeklyBudget.Servicies
 			var dto = await GetByIdAsync(id);
 			return dto != null && await _repositoryManager.ExpenditureRepository.DeleteAsync(dto);
 		}
-
-		//public Task ExpenditureAsync(int id, ExpenditureDto dto)
-		//{
-		//	throw new NotImplementedException();
-		//}
-
-		//public Task<ExpenditureDto> GetExpenditureAsync()
-		//{
-		//	throw new NotImplementedException();
-		//}
 
 		public async Task<bool> SaveAsync(int expenditureTypeId, decimal amount)
 		{
@@ -54,7 +43,8 @@ namespace WeeklyBudget.Servicies
 					Amount = new AmountDto()
 					{
 						TotalBudget = expenditure.SpentAmount
-					}
+					},
+					ExpenditureId = expenditure.ExpenditureId,
 				});
 			}
 			return expenditures;

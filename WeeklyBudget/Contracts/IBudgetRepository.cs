@@ -7,5 +7,7 @@ namespace WeeklyBudget.Contracts
         Task CreateBudgetAsync(Budget budget);
         Task<Budget?> GetActualBudgetAsync();
         Task<bool> UpdateBudgetAsync(Budget budget);
+        Task<bool> UpdateBudgetDetailsAsync(IEnumerable<BudgetDetail> budgetDetails);
+        Task<bool> UpdateBudgetDetailAsync(BudgetDetail budgetDetail);
 	}
 }

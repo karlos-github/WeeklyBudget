@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WeeklyBudget.Contracts;
-using WeeklyBudget.DTO;
 
 namespace WeeklyBudget.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
     [ApiController]
     public class BudgetController : ControllerBase
     {
@@ -13,15 +11,11 @@ namespace WeeklyBudget.Controllers
 
         public BudgetController(IBudgetService budgetService) => _budgetService = budgetService;
 
-        [HttpGet("getCurrentBudget")]
+        [HttpGet("get")]
         public async Task<IActionResult> GetActualBudget() => Ok(await _budgetService.GetActualBudgetAsync_());
 
-        [HttpPost("saveDefinition")]
-        public async Task<IActionResult> Update([FromBody] BudgetDefinitionDto budget)
-        {
-            await _budgetService.UpdateAsync(budget);
-            return Ok();
-        }
+        [HttpPost("update")]
+        public async Task<IActionResult> Update(decimal totalBudget) => Ok(await _budgetService.UpdateAsync(totalBudget));
 
         //TODO- solve UI
         /*

@@ -1,7 +1,7 @@
 ﻿using WeeklyBudget.DTO;
 using WeeklyBudget.Models;
 
-namespace WeeklyBudget.Servicies
+namespace WeeklyBudget.Service
 {
     public static class BudgetHelper
     {

@@ -13,6 +13,6 @@ namespace WeeklyBudget.Models
 		public int BudgetId { get; set; }
 		public Budget? Budget { get; set; }
 		public int ExpenditureTypeId { get; set; }
-		public decimal TotalBudget { get; set; }
+		public decimal TotalBudget { get; set; } = default;
 	}
 }

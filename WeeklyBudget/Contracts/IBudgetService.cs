@@ -1,11 +1,11 @@
 ﻿using WeeklyBudget.DTO;
-using WeeklyBudget.Models;
 
 namespace WeeklyBudget.Contracts
 {
-    public interface IBudgetService
+	public interface IBudgetService
     {
 		Task<BudgetDto_> GetActualBudgetAsync_();
-		Task UpdateAsync(BudgetDefinitionDto budget);
+		Task<bool> UpdateAsync(BudgetDefinitionDto budget);
+		Task<bool> UpdateAsync(decimal totalBudget);
 	}
 }

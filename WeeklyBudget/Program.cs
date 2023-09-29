@@ -4,11 +4,11 @@ using System.Text.Json.Serialization;
 using WeeklyBudget.Contracts;
 using WeeklyBudget.Data;
 using WeeklyBudget.Repositories;
-using WeeklyBudget.Servicies;
+using WeeklyBudget.Service;
 
 namespace WeeklyBudget
 {
-    public class Program
+	public class Program
     {
         public static void Main(string[] args)
         {
@@ -25,6 +25,7 @@ namespace WeeklyBudget
             builder.Services.AddDbContext<WeeklyBudgetContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("WeeklyBudgetConnection")));
             builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
             builder.Services.AddScoped<IBudgetService, BudgetService>();
+			builder.Services.AddScoped<IBudgetDetailService, BudgetDetailService>();
 			builder.Services.AddScoped<IExpenditureService, ExpenditureService>();
 			builder.Services.AddScoped<IExpenditureTypeService, ExpenditureTypeService>();
 
