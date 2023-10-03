@@ -1,5 +1,4 @@
-﻿using WeeklyBudget.DTO;
-using WeeklyBudget.Models;
+﻿using WeeklyBudget.Models;
 
 namespace WeeklyBudget.Contracts
 {
