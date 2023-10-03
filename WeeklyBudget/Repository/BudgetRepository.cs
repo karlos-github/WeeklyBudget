@@ -51,13 +51,5 @@ namespace WeeklyBudget.Repositories
 			var thisWeekStart = d.AddDays(-(int)d.DayOfWeek);
 			return d.AddDays(-(--currentDayOfWeek)).Date <= d.Date && d.Date <= thisWeekStart.AddDays(7).AddSeconds(-1);
 		};
-
-		/*
-        https://stackoverflow.com/questions/5376421/ef-including-other-entities-generic-repository-pattern/5376637#5376637
-        https://stackoverflow.com/questions/6791591/how-to-brings-the-entity-framework-include-extention-method-to-a-generic-iquerya?noredirect=1&lq=1
-        https://stackoverflow.com/questions/74140462/implementing-repositories-with-ef-core-without-creating-multiples-methods
-        https://stackoverflow.com/questions/74315851/ef-core-generic-repository-include-nested-navigation-properties
-        google search "net core repository pattern set include on dbset"
-        */
 	}
 }

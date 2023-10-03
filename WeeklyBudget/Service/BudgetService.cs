@@ -8,57 +8,47 @@ namespace WeeklyBudget.Service
 	{
 		const int _weeksPerMounth = 4;
 		readonly IRepositoryManager _repositoryManager;
-		BudgetDto_? _defaultBudget;
 
 		public BudgetService(IRepositoryManager repositoryManager) => _repositoryManager = repositoryManager;
 
-	
+
 
 		/// <summary>
-		/// Returns the current budget. If the current budget already exists in db, returns it otherwise a new blank budget for the current month is created
+		/// Returns the current budget. The current budget is the budget that is created for actual month.
+		/// If the current budget already exists in db, returns it otherwise a new blank budget for the current month is created
 		/// and returned.
 		/// </summary>
 		/// <returns></returns>
-		public async Task<BudgetDto_> GetActualBudgetAsync_()
+		public async Task<BudgetDto> GetActualBudgetAsync()
 		{
+			var allExpenditureTypes = await _repositoryManager.ExpenditureType.GetAllAsync() ?? Enumerable.Empty<ExpenditureType>();
 			var budget = await _repositoryManager.Budget.GetActualBudgetAsync();
+			var budgetDetails = new List<BudgetDetail>();
 			if (budget is null)
 			{
-				var currentBudgetDto = await DefaultBudgetAsync_();
-
+				var currentBudgetDto = DefaultBudgetAsync(allExpenditureTypes);
 				//TODO-KS- repeated code!!! Get rid!!!!, same in SaveBudgetDefinitionAsync(BudgetDefinitionDto budget)
-				var currentBudget = new Budget();
-				currentBudget.TotalBudget = currentBudgetDto.MonthlyAmount!.TotalBudget;
-				currentBudget.BudgetDate = currentBudget.BudgetDate;
-				var budgetDetails = new List<BudgetDetail>();
-				var allExpenditureTypes = await _repositoryManager.ExpenditureType.GetAllAsync() ?? Enumerable.Empty<ExpenditureType>();
+				budget = new Budget();
+				
 				foreach (var expenditureType in allExpenditureTypes)
 				{
 					var detail = new BudgetDetail();
 					var detailDefiniton = budget?.BudgetDetails?.FirstOrDefault(_ => _.ExpenditureTypeId == expenditureType.ExpenditureTypeId);
-
 					detail = (detailDefiniton is not null)
 						? new BudgetDetail() { ExpenditureTypeId = expenditureType.ExpenditureTypeId, TotalBudget = detailDefiniton.TotalBudget, }
 						: new BudgetDetail() { ExpenditureTypeId = expenditureType.ExpenditureTypeId, TotalBudget = 0, };
-
 					budgetDetails.Add(detail);
 				}
-				currentBudget.BudgetDetails = budgetDetails;
-
-				await _repositoryManager.Budget.CreateBudgetAsync(currentBudget);
-				//TODO-KS- get id of current budget saved to db
-				//BudgetDto_.BudgetId ... is used for updating Budget.TotalBudget & Budget.BudgetDetails[] .... need to know the BudgetId in db
-				//edit update in method UpdateAsync(BudgetDefinitionDto )
-				//currentBudgetDto.BudgetId = await _repositoryManager.Budget.GetCurrentBudgetIdAsync();
-
+				budget.BudgetDetails = budgetDetails;
+				await _repositoryManager.Budget.CreateBudgetAsync(budget);
 				return currentBudgetDto;
 			}
 
 			//total expenditures to calculate total amounts per the whole month
 			var allExpenditures = await _repositoryManager.ExpenditureRepository.GetAllAsync(DateTime.Now);//all expenditures input in db (no connection to any budget), filtered for given month
-			var allPlannedExpenditureTypes = await _repositoryManager.ExpenditureType.GetAllAsync() ?? Enumerable.Empty<ExpenditureType>();//all planned expenditure types that exist in db
+																										   //var allPlannedExpenditureTypes = await _repositoryManager.ExpenditureType.GetAllAsync() ?? Enumerable.Empty<ExpenditureType>();//all planned expenditure types that exist in db
 			var totalExpenditurePerMonth = allExpenditures?.Sum(_ => _.SpentAmount) ?? default;
-			var uiBadget = new BudgetDto_()
+			var uiBadget = new BudgetDto()
 			{
 				BudgetDate = $"{budget!.BudgetDate.Month}/{budget.BudgetDate.Year}",
 				MonthlyAmount = new AmountDto()
@@ -72,10 +62,10 @@ namespace WeeklyBudget.Service
 			};
 
 			var monthlyExpenditures = new List<ExpenditureDto>();
-			foreach (var expenditureType in allExpenditures?.GroupBy(_ => _.ExpenditureTypeId).ToList()/* ?? Enumerable.Empty<Expenditure>()*/)
+			foreach (var expenditureType in allExpenditureTypes)
 			{
-				var totalExpendituresPerType = expenditureType.Sum(_ => _.SpentAmount);
-				var totalPlannedExpenditurePerType = budget.BudgetDetails.FirstOrDefault(_ => _.ExpenditureTypeId == expenditureType.Key).TotalBudget;
+				var totalExpendituresPerType = allExpenditures?.Where(_ => _.ExpenditureTypeId == expenditureType.ExpenditureTypeId).Sum(_ => _.SpentAmount) ?? default;
+				var totalPlannedExpenditurePerType = budget.BudgetDetails?.FirstOrDefault(_ => _.ExpenditureTypeId == expenditureType.ExpenditureTypeId)?.TotalBudget ?? default;
 				monthlyExpenditures.Add(new ExpenditureDto()
 				{
 					Amount = new AmountDto()
@@ -86,7 +76,7 @@ namespace WeeklyBudget.Service
 						LeftToSpentAmount = totalPlannedExpenditurePerType - totalExpendituresPerType,
 						LeftToSpentPercent = 100 - Math.Round(totalPlannedExpenditurePerType != default ? (totalExpendituresPerType / totalPlannedExpenditurePerType) * 100 : default),
 					},
-					ExpenditureType = allPlannedExpenditureTypes?.FirstOrDefault(_ => _.ExpenditureTypeId == expenditureType.Key) ?? new ExpenditureType()
+					ExpenditureType = expenditureType
 				});
 			}
 			uiBadget.MonthlyExpenditures = monthlyExpenditures;
@@ -95,7 +85,7 @@ namespace WeeklyBudget.Service
 			for (int week = 0; week < _weeksPerMounth; week++)//each budget is divided into 4 groups, each group per 7 days (last group from 25th day to the end of the month)
 			{
 				var expenditures = new List<ExpenditureDto>();
-				foreach (var plannedExpenditureType in allPlannedExpenditureTypes)
+				foreach (var plannedExpenditureType in allExpenditureTypes)
 				{
 					var totalPlannedExpenditurePerType = budget.BudgetDetails!.FirstOrDefault(_ => _.ExpenditureTypeId == plannedExpenditureType.ExpenditureTypeId)?.TotalBudget / _weeksPerMounth ?? 0;
 					var totalExpendituresPerType = allExpenditures?.Where(_ => WeekIndex(_.SpentDate, week) && _.ExpenditureTypeId == plannedExpenditureType.ExpenditureTypeId)?.Sum(_ => _.SpentAmount) ?? default;
@@ -140,16 +130,25 @@ namespace WeeklyBudget.Service
 		};
 
 		/// <summary>
-		/// Creates Default budget, the budget always consist from 4 weeks planned expenditures
+		/// Creates Default budget for UI, the budget always consist from 4 weeks planned expenditures
 		/// </summary>
 		/// <returns></returns>
-		async Task<BudgetDto_> DefaultBudgetAsync_()
+		BudgetDto DefaultBudgetAsync(IEnumerable<ExpenditureType> expenditureTypes)
 		{
+			var monthlyExpenditures = new List<ExpenditureDto>();
+			foreach (var expenditureType in expenditureTypes)
+			{
+				monthlyExpenditures.Add(new ExpenditureDto
+				{
+					ExpenditureType = expenditureType,
+					Amount = new AmountDto(),
+				});
+			}
+
 			var weekExpenditures = new List<WeeklyExpenditureDto>();
-			var expenditures = new List<ExpenditureDto>();
-			var expenditureTypes = await _repositoryManager.ExpenditureType.GetAllAsync();
 			for (int week = 0; week < _weeksPerMounth; week++)
 			{
+				var expenditures = new List<ExpenditureDto>();
 				foreach (var expenditureType in expenditureTypes)
 				{
 					expenditures.Add(new ExpenditureDto
@@ -165,11 +164,11 @@ namespace WeeklyBudget.Service
 				});
 			}
 
-			return new BudgetDto_()
+			return new BudgetDto()
 			{
 				BudgetDate = $"{DateTime.Now.Month}/{DateTime.Now.Year}",
 				MonthlyAmount = new AmountDto(),
-				MonthlyExpenditures = expenditures,
+				MonthlyExpenditures = monthlyExpenditures,
 				WeeklyExpenditures = weekExpenditures,
 			};
 		}
@@ -210,56 +209,5 @@ namespace WeeklyBudget.Service
 			currentBudget!.TotalBudget = totalBudget;
 			return await _repositoryManager.Budget.UpdateBudgetAsync(currentBudget);
 		}
-
-		public async Task<bool> UpdateAsync(BudgetDefinitionDto budget)
-		{
-			var currentBudget = await _repositoryManager.Budget.GetActualBudgetAsync();
-			var budgetDetails = new List<BudgetDetail>();
-			var allExpenditureTypes = await _repositoryManager.ExpenditureType.GetAllAsync() ?? Enumerable.Empty<ExpenditureType>();
-
-			foreach (var expenditureType in allExpenditureTypes)
-			{
-				var detail = new BudgetDetail();
-				var detailDefiniton = budget?.BudgetDetails?.FirstOrDefault(_ => _.ExpenditureTypeId == expenditureType.ExpenditureTypeId);
-
-				detail = (detailDefiniton is not null)
-					? new BudgetDetail() { ExpenditureTypeId = expenditureType.ExpenditureTypeId, TotalBudget = detailDefiniton.TotalBudget, BudgetId = currentBudget!.BudgetId }
-					: new BudgetDetail() { ExpenditureTypeId = expenditureType.ExpenditureTypeId, TotalBudget = 0, BudgetId = currentBudget!.BudgetId };
-
-				budgetDetails.Add(detail);
-			}
-			currentBudget!.BudgetDetails = budgetDetails;
-
-			return await _repositoryManager.Budget.UpdateBudgetDetailsAsync(budgetDetails);
-		}
-
-		//TODO-KS-Create method that updates BudgetDetails collection, no other parameters of the budget will be updated at all!!!!
-		//public async Task UpdateAsync(BudgetDefinitionDto budget)
-		//{
-		//	//TODO-KS- když budget na UI nemá definovaný BudgetDetail pro některý ExpenditureType => vytvoř defaultní BudgetDetail
-		//	//Budget.BudgetDetails.Count == 4 !!!! vždy, měsíc je rozdělen na 4 podskupiny, hodnota BudgetDetail.TotalBudget = 0 pro defaultní BudgetDetail
-		//	//na UI definované BudgetDetail pro daný ExpenditureType je rozdělen na 4 podskupiny, TotalBudget / 4 pro danou skupinu vždycky
-		//	//ExpenditureType se budou definovat samostatne na UI
-		//	var currentBudget = await _repositoryManager.Budget.GetActualBudgetAsync();
-		//	currentBudget!.TotalBudget = budget.TotalBudget;
-		//	//currentBudget.BudgetDetails = 
-		//	var budgetDetails = new List<BudgetDetail>();
-		//	var allExpenditureTypes = await _repositoryManager.ExpenditureType.GetAllAsync() ?? Enumerable.Empty<ExpenditureType>();
-
-		//	foreach (var expenditureType in allExpenditureTypes)
-		//	{
-		//		var detail = new BudgetDetail();
-		//		var detailDefiniton = budget?.BudgetDetails?.FirstOrDefault(_ => _.ExpenditureTypeId == expenditureType.ExpenditureTypeId);
-
-		//		detail = (detailDefiniton is not null)
-		//			? new BudgetDetail() { ExpenditureTypeId = expenditureType.ExpenditureTypeId, TotalBudget = detailDefiniton.TotalBudget, BudgetId = currentBudget.BudgetId }
-		//			: new BudgetDetail() { ExpenditureTypeId = expenditureType.ExpenditureTypeId, TotalBudget = 0, BudgetId = currentBudget.BudgetId };
-
-		//		budgetDetails.Add(detail);
-		//	}
-		//	currentBudget.BudgetDetails = budgetDetails;
-
-		//	await _repositoryManager.Budget.UpdateBudgetAsync(currentBudget);
-		//}
 	}
 }

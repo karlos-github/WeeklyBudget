@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WeeklyBudget.Contracts;
-using WeeklyBudget.DTO;
-using WeeklyBudget.Models;
 
 namespace WeeklyBudget.Controllers
 {
@@ -18,11 +15,7 @@ namespace WeeklyBudget.Controllers
 		public async Task<IActionResult> GetAll() => Ok(await _expenditureTypeService.GetAllAsync());
 
 		[HttpPost("save/{expenditureType}")]
-		public async Task<IActionResult> Save(string expenditureType)
-		{
-			await _expenditureTypeService.SaveAsync(expenditureType);
-			return Ok();
-		}
+		public async Task<IActionResult> Save(string expenditureType) => Ok(await _expenditureTypeService.SaveAsync(expenditureType));
 
 		[HttpDelete]
 		[Route("delete/{id}")]

@@ -150,8 +150,6 @@ C:\Users\karels\source\repos\WeeklyBudget\WeeklyBudget\obj\Debug\net7.0\refint\W
 C:\Users\karels\source\repos\WeeklyBudget\WeeklyBudget\obj\Debug\net7.0\WeeklyBudget.pdb
 C:\Users\karels\source\repos\WeeklyBudget\WeeklyBudget\obj\Debug\net7.0\WeeklyBudget.genruntimeconfig.cache
 C:\Users\karels\source\repos\WeeklyBudget\WeeklyBudget\obj\Debug\net7.0\ref\WeeklyBudget.dll
-C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\appsettings.Development.json
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\appsettings.json
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\WeeklyBudget.exe
@@ -185,6 +183,7 @@ C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\Micro
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\Mono.TextTemplating.dll
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\System.CodeDom.dll
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\System.Configuration.ConfigurationManager.dll
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\System.Drawing.Common.dll
@@ -201,6 +200,7 @@ C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\runti
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll

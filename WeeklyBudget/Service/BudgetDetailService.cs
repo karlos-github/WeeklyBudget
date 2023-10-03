@@ -21,7 +21,7 @@ namespace WeeklyBudget.Service
 					budgetDetails.Add(new BudgetDetailDto()
 					{
 						ExpenditureTypeName = allExpenditureTypes.FirstOrDefault(_ => _.ExpenditureTypeId == budgetDetail.ExpenditureTypeId)!.Name ?? string.Empty,
-						ExpenditureId = budgetDetail.ExpenditureTypeId,
+						ExpenditureTypeId = budgetDetail.ExpenditureTypeId,
 						TotalBudget = budgetDetail.TotalBudget,
 					});
 				}
@@ -30,12 +30,12 @@ namespace WeeklyBudget.Service
 			return budgetDetails;
 		}
 
-		public async Task<bool> UpdateAsync(int expenditureId, decimal totalBudget)
+		public async Task<bool> UpdateAsync(int expenditureTypeId, decimal totalBudget)
 		{
 			var budget = await _repositoryManager.Budget.GetActualBudgetAsync();
 			if (budget != null)
 			{
-				var budgetDetail = budget.BudgetDetails!.FirstOrDefault(_ => _.ExpenditureTypeId == expenditureId);
+				var budgetDetail = budget.BudgetDetails!.FirstOrDefault(_ => _.ExpenditureTypeId == expenditureTypeId);
 				budgetDetail!.TotalBudget = totalBudget;
 				return await _repositoryManager.Budget.UpdateBudgetDetailAsync(budgetDetail);
 			}

@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace WeeklyBudget.Models
+﻿namespace WeeklyBudget.Models
 {
 	/// <summary>
 	/// BudgetDetail class represents a budget's one item expenditure type blue print. Simply saying represents how much

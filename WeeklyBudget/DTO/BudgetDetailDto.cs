@@ -1,10 +1,8 @@
-﻿using WeeklyBudget.Models;
-
-namespace WeeklyBudget.DTO
+﻿namespace WeeklyBudget.DTO
 {
 	public class BudgetDetailDto
 	{
-		public int ExpenditureId { get; set; }
+		public int ExpenditureTypeId { get; set; }
 		public string ExpenditureTypeName { get; set; } = string.Empty;
 		public decimal TotalBudget { get; set; } = default;
 		public decimal LeftToSpentPercent { get; set; } = 100;

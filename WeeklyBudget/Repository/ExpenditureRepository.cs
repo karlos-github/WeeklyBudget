@@ -1,7 +1,4 @@
-﻿using Microsoft.CSharp.RuntimeBinder;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
+﻿using Microsoft.EntityFrameworkCore;
 using WeeklyBudget.Contracts;
 using WeeklyBudget.Data;
 using WeeklyBudget.Models;
@@ -34,10 +31,5 @@ namespace WeeklyBudget.Repositories
 			await _budgetContext.Expenditures.AddAsync(dto);
 			return await _budgetContext.SaveChangesAsync() != default;
 		}
-
-		//public async Task<bool> UpdateAsync(Expenditure dto)
-		//{
-		//	throw new NotImplementedException();
-		//}
 	}
 }

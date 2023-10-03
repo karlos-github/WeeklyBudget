@@ -42,9 +42,8 @@ namespace WeeklyBudget.Service
 					ExpenditureType = allPlannedExpenditureTypes.FirstOrDefault(_ => _.ExpenditureTypeId == expenditure.ExpenditureTypeId)!,
 					Amount = new AmountDto()
 					{
-						TotalBudget = expenditure.SpentAmount
+						SpentAmount = expenditure.SpentAmount
 					},
-					ExpenditureId = expenditure.ExpenditureId,
 				});
 			}
 			return expenditures;

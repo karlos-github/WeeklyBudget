@@ -5,17 +5,17 @@ namespace WeeklyBudget.Service
 {
     public static class BudgetHelper
     {
-        public static BudgetDto_ MapBudget(this Budget budget)
+        public static BudgetDto MapBudget(this Budget budget)
         {
-            return new BudgetDto_();
+            return new BudgetDto();
         }
 
         //TODO-KS- creates default budget in case that current budget not exists yet
         // takes setting of previous budget if exists or creates default with zero amounts using all expenditure types that exist
-        public static BudgetDto_ MapDefaultBudget()
+        public static BudgetDto MapDefaultBudget()
         {
 
-            return new BudgetDto_();
+            return new BudgetDto();
         }
     }
 }

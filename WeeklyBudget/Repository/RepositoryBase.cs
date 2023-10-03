@@ -2,11 +2,10 @@
 using System.Linq.Expressions;
 using WeeklyBudget.Contracts;
 using WeeklyBudget.Data;
-using WeeklyBudget.Models;
 
 namespace WeeklyBudget.Repositories
 {
-    public class RepositoryBase<T> : IRepositoryBase<T> where T : class
+	public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         protected WeeklyBudgetContext _budgetContext;
 
