@@ -2,8 +2,8 @@
 {
     public interface IRepositoryManager
     {
-        IBudgetRepository Budget { get; }
-        IExpenditureTypeRepository ExpenditureType { get; }
-		IExpenditureRepository ExpenditureRepository { get; }
+        IBudgetRepository Budgets { get; }
+        IExpenditureTypeRepository ExpenditureTypes { get; }
+		IExpenditureRepository Expenditures { get; }
     }
 }

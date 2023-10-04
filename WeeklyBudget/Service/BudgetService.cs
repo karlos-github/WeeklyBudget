@@ -21,32 +21,21 @@ namespace WeeklyBudget.Service
 		/// <returns></returns>
 		public async Task<BudgetDto> GetActualBudgetAsync()
 		{
-			var allExpenditureTypes = await _repositoryManager.ExpenditureType.GetAllAsync() ?? Enumerable.Empty<ExpenditureType>();
-			var budget = await _repositoryManager.Budget.GetActualBudgetAsync();
-			var budgetDetails = new List<BudgetDetail>();
+			var allExpenditureTypes = await _repositoryManager.ExpenditureTypes.GetAllAsync() ?? Enumerable.Empty<ExpenditureType>();
+			var budget = await _repositoryManager.Budgets.GetActualBudgetAsync();
+
 			if (budget is null)
 			{
-				var currentBudgetDto = DefaultBudgetAsync(allExpenditureTypes);
-				//TODO-KS- repeated code!!! Get rid!!!!, same in SaveBudgetDefinitionAsync(BudgetDefinitionDto budget)
+				var budgetDetails = new List<BudgetDetail>();
 				budget = new Budget();
-				
-				foreach (var expenditureType in allExpenditureTypes)
-				{
-					var detail = new BudgetDetail();
-					var detailDefiniton = budget?.BudgetDetails?.FirstOrDefault(_ => _.ExpenditureTypeId == expenditureType.ExpenditureTypeId);
-					detail = (detailDefiniton is not null)
-						? new BudgetDetail() { ExpenditureTypeId = expenditureType.ExpenditureTypeId, TotalBudget = detailDefiniton.TotalBudget, }
-						: new BudgetDetail() { ExpenditureTypeId = expenditureType.ExpenditureTypeId, TotalBudget = 0, };
-					budgetDetails.Add(detail);
-				}
+				allExpenditureTypes?.ToList()?.ForEach(_ => { budgetDetails.Add(new BudgetDetail() { ExpenditureTypeId = _.ExpenditureTypeId, }); });
 				budget.BudgetDetails = budgetDetails;
-				await _repositoryManager.Budget.CreateBudgetAsync(budget);
-				return currentBudgetDto;
+				await _repositoryManager.Budgets.CreateBudgetAsync(budget);
+
+				return DefaultBudgetAsync(allExpenditureTypes ?? new List<ExpenditureType>());
 			}
 
-			//total expenditures to calculate total amounts per the whole month
-			var allExpenditures = await _repositoryManager.ExpenditureRepository.GetAllAsync(DateTime.Now);//all expenditures input in db (no connection to any budget), filtered for given month
-																										   //var allPlannedExpenditureTypes = await _repositoryManager.ExpenditureType.GetAllAsync() ?? Enumerable.Empty<ExpenditureType>();//all planned expenditure types that exist in db
+			var allExpenditures = await _repositoryManager.Expenditures.GetAllAsync(DateTime.Now);
 			var totalExpenditurePerMonth = allExpenditures?.Sum(_ => _.SpentAmount) ?? default;
 			var uiBadget = new BudgetDto()
 			{
@@ -132,7 +121,6 @@ namespace WeeklyBudget.Service
 		/// <summary>
 		/// Creates Default budget for UI, the budget always consist from 4 weeks planned expenditures
 		/// </summary>
-		/// <returns></returns>
 		BudgetDto DefaultBudgetAsync(IEnumerable<ExpenditureType> expenditureTypes)
 		{
 			var monthlyExpenditures = new List<ExpenditureDto>();
@@ -181,7 +169,7 @@ namespace WeeklyBudget.Service
 		async Task<Budget> CreateDefaultBudgetAsync()
 		{
 			var budgetDetails = new List<BudgetDetail>();
-			var expenditureTypes = await _repositoryManager.ExpenditureType.GetAllAsync();
+			var expenditureTypes = await _repositoryManager.ExpenditureTypes.GetAllAsync();
 			foreach (var expenditureType in expenditureTypes)
 			{
 				budgetDetails.Add(new BudgetDetail()
@@ -195,7 +183,7 @@ namespace WeeklyBudget.Service
 				BudgetDetails = budgetDetails,
 			};
 
-			await _repositoryManager.Budget.CreateBudgetAsync(defaultBudget);
+			await _repositoryManager.Budgets.CreateBudgetAsync(defaultBudget);
 
 			return defaultBudget;
 		}
@@ -205,9 +193,9 @@ namespace WeeklyBudget.Service
 		/// </summary>
 		public async Task<bool> UpdateAsync(decimal totalBudget)
 		{
-			var currentBudget = await _repositoryManager.Budget.GetActualBudgetAsync() ?? await CreateDefaultBudgetAsync();
+			var currentBudget = await _repositoryManager.Budgets.GetActualBudgetAsync() ?? await CreateDefaultBudgetAsync();
 			currentBudget!.TotalBudget = totalBudget;
-			return await _repositoryManager.Budget.UpdateBudgetAsync(currentBudget);
+			return await _repositoryManager.Budgets.UpdateBudgetAsync(currentBudget);
 		}
 	}
 }

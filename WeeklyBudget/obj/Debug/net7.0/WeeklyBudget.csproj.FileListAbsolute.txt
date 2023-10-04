@@ -228,3 +228,4 @@ C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\runti
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\WeeklyBudget.xml
 C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\obj\Debug\net7.0\WeeklyBudget.xml
+C:\Users\k.skrabal\source\repos\WeeklyBudget\WeeklyBudget\bin\Debug\net7.0\appsettings.Production.json

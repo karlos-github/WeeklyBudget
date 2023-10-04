@@ -12,8 +12,8 @@ namespace WeeklyBudget.Repositories
 
         public RepositoryManager(WeeklyBudgetContext weeklyBudgetContext) => _weeklyBudgetContext = weeklyBudgetContext;
 
-        public IBudgetRepository Budget => _budgetRepository ??= new BudgetRepository(_weeklyBudgetContext);
-        public IExpenditureTypeRepository ExpenditureType => _expenseTypeRepository ??= new ExpenditureTypeRepository(_weeklyBudgetContext);
-        public IExpenditureRepository ExpenditureRepository => _expenditureRepository ??= new ExpenditureRepository(_weeklyBudgetContext);
+        public IBudgetRepository Budgets => _budgetRepository ??= new BudgetRepository(_weeklyBudgetContext);
+        public IExpenditureTypeRepository ExpenditureTypes => _expenseTypeRepository ??= new ExpenditureTypeRepository(_weeklyBudgetContext);
+        public IExpenditureRepository Expenditures => _expenditureRepository ??= new ExpenditureRepository(_weeklyBudgetContext);
     }
 }

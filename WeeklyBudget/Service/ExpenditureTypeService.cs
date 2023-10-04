@@ -11,20 +11,20 @@ namespace WeeklyBudget.Service
 			=> _repositoryManager = repositoryManager;
 
 		public async Task<ExpenditureType?> GetByIdAsync(int id)
-			=> await _repositoryManager.ExpenditureType.GetByIdAsync(id);
+			=> await _repositoryManager.ExpenditureTypes.GetByIdAsync(id);
 
 		public async Task<bool> DeleteAsync(int id)
 		{
 			var dto = await GetByIdAsync(id);
-			return dto != null && await _repositoryManager.ExpenditureType.DeleteAsync(dto);
+			return dto != null && await _repositoryManager.ExpenditureTypes.DeleteAsync(dto);
 		}
 
 		public async Task<IEnumerable<ExpenditureType>> GetAllAsync()
-			=> await _repositoryManager.ExpenditureType.GetAllAsync();
+			=> await _repositoryManager.ExpenditureTypes.GetAllAsync();
 
 		public async Task<bool> SaveAsync(string expenditureTypeName) => 
 			string.IsNullOrEmpty(expenditureTypeName) 
 			? false 
-			: await _repositoryManager.ExpenditureType.SaveAsync(new ExpenditureType() { Name = expenditureTypeName });
+			: await _repositoryManager.ExpenditureTypes.SaveAsync(new ExpenditureType() { Name = expenditureTypeName });
 	}
 }

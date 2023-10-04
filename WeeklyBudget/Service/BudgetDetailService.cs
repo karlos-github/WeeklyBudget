@@ -12,10 +12,10 @@ namespace WeeklyBudget.Service
 		public async Task<IEnumerable<BudgetDetailDto>> GetActualBudgetDetailsAsync()
 		{
 			var budgetDetails = new List<BudgetDetailDto>();
-			var budget = await _repositoryManager.Budget.GetActualBudgetAsync();
+			var budget = await _repositoryManager.Budgets.GetActualBudgetAsync();
 			if (budget != null)
 			{
-				var allExpenditureTypes = await _repositoryManager.ExpenditureType.GetAllAsync() ;
+				var allExpenditureTypes = await _repositoryManager.ExpenditureTypes.GetAllAsync() ;
 				foreach (var budgetDetail in budget.BudgetDetails!)
 				{
 					budgetDetails.Add(new BudgetDetailDto()
@@ -32,12 +32,12 @@ namespace WeeklyBudget.Service
 
 		public async Task<bool> UpdateAsync(int expenditureTypeId, decimal totalBudget)
 		{
-			var budget = await _repositoryManager.Budget.GetActualBudgetAsync();
+			var budget = await _repositoryManager.Budgets.GetActualBudgetAsync();
 			if (budget != null)
 			{
 				var budgetDetail = budget.BudgetDetails!.FirstOrDefault(_ => _.ExpenditureTypeId == expenditureTypeId);
 				budgetDetail!.TotalBudget = totalBudget;
-				return await _repositoryManager.Budget.UpdateBudgetDetailAsync(budgetDetail);
+				return await _repositoryManager.Budgets.UpdateBudgetDetailAsync(budgetDetail);
 			}
 			return false;
 		}
