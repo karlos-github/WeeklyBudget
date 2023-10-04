@@ -5,6 +5,8 @@ using WeeklyBudget.Data;
 using WeeklyBudget.Repositories;
 using WeeklyBudget.Service;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
+using System.Reflection;
 
 namespace WeeklyBudget
 {
@@ -34,10 +36,13 @@ namespace WeeklyBudget
 					Contact = new OpenApiContact
 					{
 						Name = "Link to API hosting",
-						Url = new Uri("http://skrabal.aspfree.cz/"),
+						Url = new Uri("http://skrabal.aspifyhost.cz/"),
 						Email = "karel.skrabal@seznam.cz"
 					},
 				});
+
+				var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+				options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 			});
 
 			builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);

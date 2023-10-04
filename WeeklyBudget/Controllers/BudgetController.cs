@@ -4,22 +4,26 @@ using WeeklyBudget.Contracts;
 namespace WeeklyBudget.Controllers
 {
 	[Route("api/[controller]")]
-    [ApiController]
-    public class BudgetController : ControllerBase
-    {
-        readonly IBudgetService _budgetService;
+	[ApiController]
+	public class BudgetController : ControllerBase
+	{
+		readonly IBudgetService _budgetService;
 
-        public BudgetController(IBudgetService budgetService) => _budgetService = budgetService;
+		public BudgetController(IBudgetService budgetService) => _budgetService = budgetService;
 
-        [HttpGet("get")]
-        public async Task<IActionResult> GetActualBudget() => Ok(await _budgetService.GetActualBudgetAsync());
+		/// <summary>
+		/// Gets the current budget. If there's no budget existing in database corresponding to the actual month, than 
+		/// a default budget will be created.
+		/// </summary>
+		/// <returns>BudgetDto</returns>		
+		[HttpGet("get")]
+		public async Task<IActionResult> GetActualBudget() => Ok(await _budgetService.GetActualBudgetAsync());
 
-        /// <summary>
-        /// TEST
-        /// </summary>
-        /// <param name="totalBudget"></param>
-        /// <returns></returns>
-        [HttpPost("update")]
-        public async Task<IActionResult> Update(decimal totalBudget) => Ok(await _budgetService.UpdateAsync(totalBudget));
-    }
+		/// <summary>
+		/// Updates the current budget's TotalBudget value for the actual month.
+		/// </summary>
+		/// <param name="totalBudget">Total monthly budget amount</param>
+		[HttpPut("update")]
+		public async Task<IActionResult> Update(decimal totalBudget) => Ok(await _budgetService.UpdateAsync(totalBudget));
+	}
 }

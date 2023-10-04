@@ -44,6 +44,7 @@ namespace WeeklyBudget.Service
 					{
 						SpentAmount = expenditure.SpentAmount
 					},
+					ExpenditureId = expenditure.ExpenditureId,
 				});
 			}
 			return expenditures;
