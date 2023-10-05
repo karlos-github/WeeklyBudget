@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using WeeklyBudget.Contracts;
 using WeeklyBudget.Data;
 
-namespace WeeklyBudget.Repositories
+namespace WeeklyBudget.Repository
 {
 	public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {

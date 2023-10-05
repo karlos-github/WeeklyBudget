@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using WeeklyBudget.Contracts;
 using WeeklyBudget.Data;
-using WeeklyBudget.Repositories;
+using WeeklyBudget.Repository;
 using WeeklyBudget.Service;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Options;

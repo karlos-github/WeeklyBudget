@@ -121,7 +121,7 @@ namespace WeeklyBudget.Service
 		/// <summary>
 		/// Creates Default budget for UI, the budget always consist from 4 weeks planned expenditures
 		/// </summary>
-		BudgetDto DefaultBudgetAsync(IEnumerable<ExpenditureType> expenditureTypes)
+		static BudgetDto DefaultBudgetAsync(IEnumerable<ExpenditureType> expenditureTypes)
 		{
 			var monthlyExpenditures = new List<ExpenditureDto>();
 			foreach (var expenditureType in expenditureTypes)

@@ -1,12 +1,9 @@
-﻿using Microsoft.CSharp.RuntimeBinder;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
+﻿using Microsoft.EntityFrameworkCore;
 using WeeklyBudget.Contracts;
 using WeeklyBudget.Data;
 using WeeklyBudget.Models;
 
-namespace WeeklyBudget.Repositories
+namespace WeeklyBudget.Repository
 {
 	public class BudgetRepository : RepositoryBase<Budget>, IBudgetRepository
 	{
@@ -27,13 +24,6 @@ namespace WeeklyBudget.Repositories
 			return await _budgetContext.SaveChangesAsync() != default;
 		}
 
-		public async Task<bool> UpdateBudgetDetailsAsync(IEnumerable<BudgetDetail> budgetDetails)
-		{
-			_budgetContext.BudgetDetails.UpdateRange(budgetDetails);
-			//_budgetContext.Entry<Budget>(budget).State = EntityState.Modified;
-			return await _budgetContext.SaveChangesAsync() != default;
-		}
-
 		public async Task<bool> UpdateBudgetDetailAsync(BudgetDetail budgetDetail)
 		{
 			_budgetContext.BudgetDetails.Update(budgetDetail);
@@ -44,12 +34,5 @@ namespace WeeklyBudget.Repositories
 			=> await _budgetContext.Budgets
 				.Include(_ => _.BudgetDetails)
 				.FirstOrDefaultAsync(_ => _.BudgetDate.Month == DateTime.Now.Month);
-
-		readonly Func<DateTime, bool> isCurrentWeek = d =>
-		{
-			var currentDayOfWeek = (int)d.DayOfWeek;
-			var thisWeekStart = d.AddDays(-(int)d.DayOfWeek);
-			return d.AddDays(-(--currentDayOfWeek)).Date <= d.Date && d.Date <= thisWeekStart.AddDays(7).AddSeconds(-1);
-		};
 	}
 }

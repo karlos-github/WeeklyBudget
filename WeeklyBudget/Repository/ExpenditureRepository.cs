@@ -3,7 +3,7 @@ using WeeklyBudget.Contracts;
 using WeeklyBudget.Data;
 using WeeklyBudget.Models;
 
-namespace WeeklyBudget.Repositories
+namespace WeeklyBudget.Repository
 {
 	public class ExpenditureRepository : RepositoryBase<Expenditure>, IExpenditureRepository
 	{

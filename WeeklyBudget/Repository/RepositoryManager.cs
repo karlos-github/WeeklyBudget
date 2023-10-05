@@ -1,9 +1,10 @@
 ﻿using WeeklyBudget.Contracts;
 using WeeklyBudget.Data;
 
-namespace WeeklyBudget.Repositories
+namespace WeeklyBudget.Repository
 {
-    public class RepositoryManager : IRepositoryManager
+#pragma warning disable CS8618
+	public class RepositoryManager : IRepositoryManager
     {
         readonly WeeklyBudgetContext _weeklyBudgetContext;
         IBudgetRepository _budgetRepository;
@@ -11,9 +12,9 @@ namespace WeeklyBudget.Repositories
         IExpenditureRepository _expenditureRepository;
 
         public RepositoryManager(WeeklyBudgetContext weeklyBudgetContext) => _weeklyBudgetContext = weeklyBudgetContext;
-
         public IBudgetRepository Budgets => _budgetRepository ??= new BudgetRepository(_weeklyBudgetContext);
         public IExpenditureTypeRepository ExpenditureTypes => _expenseTypeRepository ??= new ExpenditureTypeRepository(_weeklyBudgetContext);
         public IExpenditureRepository Expenditures => _expenditureRepository ??= new ExpenditureRepository(_weeklyBudgetContext);
     }
+#pragma warning restore CS8618
 }

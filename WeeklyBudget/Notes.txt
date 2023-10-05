@@ -1,0 +1,95 @@
+USE [WeeklyBudget]
+GO
+UPDATE [dbo].[BudgetDetails]
+   SET [BudgetDetailId] = 10
+      ,[BudgetId] = 7
+      ,[ExpenditureTypeId] = 1
+      ,[TotalBudget] = 12000
+ WHERE [BudgetDetailId] = 10
+GO
+INSERT INTO [dbo].[BudgetDetails]
+           ([BudgetId]
+           ,[TotalBudget]
+		              ,[BudgetDetailId]
+           ,[ExpenditureTypeId])
+     VALUES
+           (7
+           ,10000
+		   ,11
+           ,3)
+GO
+select * from BudgetDetails;
+----------------------------------------
+INSERT INTO [dbo].[Budgets]
+           ([BudgetDate]
+           ,[TotalBudget])
+     VALUES
+           ('2023-08-22 20:39:31.0634387'
+           ,30000)
+GO
+INSERT INTO [dbo].[Budgets]
+           ([BudgetDate]
+           ,[TotalBudget])
+     VALUES
+           ('2023-07-22 20:39:31.0634387'
+           ,30000)
+GO
+INSERT INTO [dbo].[Budgets]
+           ([BudgetDate]
+           ,[TotalBudget])
+     VALUES
+           ('2023-09-22 20:39:31.0634387'
+           ,28000)
+GO
+USE [WeeklyBudget]
+GO
+
+DELETE FROM [dbo].[Budgets]
+      WHERE BudgetId = 10
+GO
+
+
+select * from Budgets;
+-----------------------------
+INSERT INTO [dbo].[ExpenditureTypes]
+           ([Name])
+     VALUES
+           ('alcohol')
+GO
+INSERT INTO [dbo].[ExpenditureTypes]
+           ([Name])
+     VALUES
+           ('drugs')
+GO
+INSERT INTO [dbo].[ExpenditureTypes]
+           ([Name])
+     VALUES
+           ('sex')
+GO
+INSERT INTO [dbo].[ExpenditureTypes]
+           ([Name])
+     VALUES
+           ('sex__')
+GO
+USE [WeeklyBudget]
+select * from ExpenditureTypes;
+-----------------------------
+USE [WeeklyBudget]
+GO
+INSERT INTO [dbo].[Expenditures]
+           ([ExpenditureTypeId]
+           ,[SpentDate]
+           ,[SpentAmount]
+           ,[ExpenditureId])
+     VALUES
+           (2
+           ,'2023-09-15 22:39:31.0634387'
+           ,4000
+           ,13)
+GO
+select * from Expenditures;
+
+
+
+
+

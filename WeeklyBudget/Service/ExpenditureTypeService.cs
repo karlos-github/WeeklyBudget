@@ -22,9 +22,7 @@ namespace WeeklyBudget.Service
 		public async Task<IEnumerable<ExpenditureType>> GetAllAsync()
 			=> await _repositoryManager.ExpenditureTypes.GetAllAsync();
 
-		public async Task<bool> SaveAsync(string expenditureTypeName) => 
-			string.IsNullOrEmpty(expenditureTypeName) 
-			? false 
-			: await _repositoryManager.ExpenditureTypes.SaveAsync(new ExpenditureType() { Name = expenditureTypeName });
+		public async Task<bool> SaveAsync(string expenditureTypeName)
+			=> !string.IsNullOrEmpty(expenditureTypeName) && await _repositoryManager.ExpenditureTypes.SaveAsync(new ExpenditureType() { Name = expenditureTypeName });
 	}
 }
