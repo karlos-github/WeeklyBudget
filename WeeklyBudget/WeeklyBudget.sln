@@ -5,11 +5,6 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeeklyBudget", "WeeklyBudget.csproj", "{9417975C-6194-4561-8B40-4152CB13CC0E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C7216702-7434-4E9C-90E8-D28DB8A245A3}"
-	ProjectSection(SolutionItems) = preProject
-		Notes.txt = Notes.txt
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

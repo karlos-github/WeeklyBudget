@@ -9,6 +9,9 @@ namespace WeeklyBudget.Service
 
 		public BudgetDetailService(IRepositoryManager repositoryManager) => _repositoryManager = repositoryManager;
 
+		/// <summary>
+		/// Method returns list of all BudgetDetails that belong to the current Budget
+		/// </summary>
 		public async Task<IEnumerable<BudgetDetailDto>> GetActualBudgetDetailsAsync()
 		{
 			var budgetDetails = new List<BudgetDetailDto>();
@@ -30,6 +33,11 @@ namespace WeeklyBudget.Service
 			return budgetDetails;
 		}
 
+		/// <summary>
+		/// Updates budget amount for the certain expenditure type item given for the current monthly budget.
+		/// </summary>
+		/// <param name="expenditureTypeId">Expenditure type identification</param>
+		/// <param name="totalBudget">Total amount of budget planned to spent for the certain expenditure type</param>
 		public async Task<bool> UpdateAsync(int expenditureTypeId, decimal totalBudget)
 		{
 			var budget = await _repositoryManager.Budgets.GetActualBudgetAsync();

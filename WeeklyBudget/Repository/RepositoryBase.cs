@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using WeeklyBudget.Contracts;
-using WeeklyBudget.Data;
+using WeeklyBudget.Context;
 
 namespace WeeklyBudget.Repository
 {

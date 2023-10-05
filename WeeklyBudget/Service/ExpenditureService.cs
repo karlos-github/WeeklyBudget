@@ -10,14 +10,27 @@ namespace WeeklyBudget.Service
 
 		public ExpenditureService(IRepositoryManager repositoryManager) => _repositoryManager = repositoryManager;
 
+		/// <summary>
+		/// Gets expenditure by given id
+		/// </summary>
+		/// <param name="id">Expenditure Id</param>
 		public async Task<Expenditure?> GetByIdAsync(int id) => await _repositoryManager.Expenditures.GetByIdAsync(id);
 
+		/// <summary>
+		/// Deletes the expenditure
+		/// </summary>
+		/// <param name="id">Expenditure Id</param>
 		public async Task<bool> DeleteAsync(int id)
 		{
 			var dto = await GetByIdAsync(id);
 			return dto != null && await _repositoryManager.Expenditures.DeleteAsync(dto);
 		}
 
+		/// <summary>
+		/// Creates a new expenditure for the current monthly budget for the certain expenditure type
+		/// </summary>
+		/// <param name="expenditureTypeId">Expenditure type Id</param>
+		/// <param name="amount">Money spent for the certain expenditure type</param>
 		public async Task<bool> SaveAsync(int expenditureTypeId, decimal amount)
 		{
 			var expenditureType = await _repositoryManager.ExpenditureTypes.GetByIdAsync(expenditureTypeId);
@@ -29,6 +42,9 @@ namespace WeeklyBudget.Service
 			});
 		}
 
+		/// <summary>
+		/// Returns all expenditures for the current monthly budget
+		/// </summary>
 		public async Task<IEnumerable<ExpenditureDto>> GetAllAsync()
 		{
 			var expenditures = new List<ExpenditureDto>();

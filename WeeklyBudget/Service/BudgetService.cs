@@ -18,7 +18,6 @@ namespace WeeklyBudget.Service
 		/// If the current budget already exists in db, returns it otherwise a new blank budget for the current month is created
 		/// and returned.
 		/// </summary>
-		/// <returns></returns>
 		public async Task<BudgetDto> GetActualBudgetAsync()
 		{
 			var allExpenditureTypes = await _repositoryManager.ExpenditureTypes.GetAllAsync() ?? Enumerable.Empty<ExpenditureType>();

@@ -1,11 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using System.Reflection.Emit;
-using System.Reflection.Metadata;
 using WeeklyBudget.Models;
-using WeeklyBudget.Models.Configurations;
 
-namespace WeeklyBudget.Data
+namespace WeeklyBudget.Context
 {
 	public class WeeklyBudgetContext : DbContext
 	{

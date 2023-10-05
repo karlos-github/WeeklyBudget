@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WeeklyBudget.Contracts;
-using WeeklyBudget.Data;
+using WeeklyBudget.Context;
 using WeeklyBudget.Models;
 
 namespace WeeklyBudget.Repository
