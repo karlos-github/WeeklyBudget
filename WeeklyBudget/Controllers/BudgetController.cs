@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WeeklyBudget.Contracts;
-using WeeklyBudget.Service;
 
 namespace WeeklyBudget.Controllers
 {
@@ -37,8 +36,7 @@ namespace WeeklyBudget.Controllers
 		/// <summary>
 		/// The day in the mounth when the user receives his/her salary
 		/// </summary>
-		/// <param name="salaryDay">The day in the mounth</param>
-		[HttpPut("updateSalaryDay/{day}")]
-		public async Task<IActionResult> UpdateSalaryDay(int salaryDay) => Ok(await _budgetService.UpdateSalaryDayAsync(salaryDay));
+		[HttpPut("updateSalaryDay")]
+		public async Task<IActionResult> UpdateSalaryDay([FromBody] int salaryDay) => Ok(await _budgetService.UpdateSalaryDayAsync(salaryDay));
 	}
 }

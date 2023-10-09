@@ -15,7 +15,7 @@ namespace WeeklyBudget.Service
 		public async Task<IEnumerable<BudgetDetailDto>> GetActualBudgetDetailsAsync()
 		{
 			var budgetDetails = new List<BudgetDetailDto>();
-			var budget = await _repositoryManager.Budgets.GetActualBudgetAsync();
+			var budget = await _repositoryManager.Budgets.GetActualBudgetAsync(deep: true);
 			if (budget != null)
 			{
 				var allExpenditureTypes = await _repositoryManager.ExpenditureTypes.GetAllAsync() ;
@@ -40,7 +40,7 @@ namespace WeeklyBudget.Service
 		/// <param name="totalBudget">Total amount of budget planned to spent for the certain expenditure type</param>
 		public async Task<bool> UpdateAsync(int expenditureTypeId, decimal totalBudget)
 		{
-			var budget = await _repositoryManager.Budgets.GetActualBudgetAsync();
+			var budget = await _repositoryManager.Budgets.GetActualBudgetAsync(deep: true);
 			if (budget != null)
 			{
 				var budgetDetail = budget.BudgetDetails!.FirstOrDefault(_ => _.ExpenditureTypeId == expenditureTypeId);

@@ -1,9 +1,8 @@
 ﻿using System.Linq.Expressions;
-using WeeklyBudget.Models;
 
 namespace WeeklyBudget.Contracts
 {
-    public interface IRepositoryBase<T>
+	public interface IRepositoryBase<T>
     {
         IQueryable<T> FindAll(bool trackChanges);
         IQueryable<T> FindAllDeep(bool trackChanges);

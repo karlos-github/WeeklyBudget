@@ -12,11 +12,13 @@ namespace WeeklyBudget.Service
 
 		public BudgetService(IRepositoryManager repositoryManager) => _repositoryManager = repositoryManager;
 
-		DateTime AssignBudgetDate 
+		/// <summary>
+		/// Sets the default budget day based on _defaultSalaryDay constant
+		/// </summary>
+		static DateTime SetDefaultBudgetDate()
 			=> DateTime.Now.Date.Day < _defaultSalaryDay
 				? new DateTime(DateTime.Now.Year, DateTime.Now.Month, _defaultSalaryDay).AddMonths(-1)
 				: new DateTime(DateTime.Now.Year, DateTime.Now.Month, _defaultSalaryDay);
-
 
 		/// <summary>
 		/// Returns the current budget. The current budget is the budget that is created for actual month.
@@ -26,14 +28,15 @@ namespace WeeklyBudget.Service
 		public async Task<BudgetDto> GetActualBudgetAsync()
 		{
 			var allExpenditureTypes = await _repositoryManager.ExpenditureTypes.GetAllAsync() ?? Enumerable.Empty<ExpenditureType>();
-			var budget = await _repositoryManager.Budgets.GetActualBudgetAsync();
+			var budget = await _repositoryManager.Budgets.GetActualBudgetAsync(deep: true);
 
+			//No budget exists for the current month => a default one gonna be created!!!
 			if (budget is null)
 			{
 				var budgetDetails = new List<BudgetDetail>();
 				budget = new Budget()
 				{
-					BudgetDate = AssignBudgetDate
+					BudgetDate = SetDefaultBudgetDate()//TODO-KS- copy BudgetDate from the previous budget if exists any, otherwise the default value will be used
 				};
 				allExpenditureTypes?.ToList()?.ForEach(_ => { budgetDetails.Add(new BudgetDetail() { ExpenditureTypeId = _.ExpenditureTypeId, }); });
 				budget.BudgetDetails = budgetDetails;
@@ -42,11 +45,13 @@ namespace WeeklyBudget.Service
 				return DefaultBudgetAsync(allExpenditureTypes ?? new List<ExpenditureType>());
 			}
 
+			//There already is a budget for the current month => transform Budget to BudgetDto (UI)
 			var allExpenditures = await _repositoryManager.Expenditures.GetAllAsync(DateTime.Now);
 			var totalExpenditurePerMonth = allExpenditures?.Sum(_ => _.SpentAmount) ?? default;
 			var uiBadget = new BudgetDto()
 			{
 				BudgetDate = $"{budget!.BudgetDate.Month}/{budget.BudgetDate.Year}",
+				SalaryDay = budget.BudgetDate.Day,
 				MonthlyAmount = new AmountDto()
 				{
 					SpentAmount = totalExpenditurePerMonth,
@@ -61,6 +66,7 @@ namespace WeeklyBudget.Service
 			foreach (var expenditureType in allExpenditureTypes)
 			{
 				var totalExpendituresPerType = allExpenditures?.Where(_ => _.ExpenditureTypeId == expenditureType.ExpenditureTypeId).Sum(_ => _.SpentAmount) ?? default;
+				//TODO-KS- if no BudgetDetails defined and total budget amount is defined => TotalBudget in MonthlyExpenditure and TotalBudgets in all WeekExpenditures equally devide
 				var totalPlannedExpenditurePerType = budget.BudgetDetails?.FirstOrDefault(_ => _.ExpenditureTypeId == expenditureType.ExpenditureTypeId)?.TotalBudget ?? default;
 				monthlyExpenditures.Add(new ExpenditureDto()
 				{
@@ -78,13 +84,25 @@ namespace WeeklyBudget.Service
 			uiBadget.MonthlyExpenditures = monthlyExpenditures;
 
 			var weeklyExpenditures = new List<WeeklyExpenditureDto>(_weeksPerMounth);//always have 4 items
-			for (int week = 0; week < _weeksPerMounth; week++)//each budget is divided into 4 groups, each group per 7 days (last group from 25th day to the end of the month)
+			for (int week = 0; week < _weeksPerMounth; week++)//each budget is divided into 4 blocks, per 7 days each, starting from BudgetDate (last group from 25th day to the next month, next SalaryDay)
 			{
+				//TODO-KS- Create dynamic predicate by creating an Expression
+				var lowerBoundDateTime = budget.BudgetDate.AddDays(7 * week);
+				var upperBoundDateTime = (week == _weeksPerMounth - 1) ? budget.BudgetDate.AddMonths(1) : budget.BudgetDate.AddDays(7 * (week + 1));
+
 				var expenditures = new List<ExpenditureDto>();
 				foreach (var plannedExpenditureType in allExpenditureTypes)
 				{
 					var totalPlannedExpenditurePerType = budget.BudgetDetails!.FirstOrDefault(_ => _.ExpenditureTypeId == plannedExpenditureType.ExpenditureTypeId)?.TotalBudget / _weeksPerMounth ?? 0;
-					var totalExpendituresPerType = allExpenditures?.Where(_ => WeekIndex(_.SpentDate, week) && _.ExpenditureTypeId == plannedExpenditureType.ExpenditureTypeId)?.Sum(_ => _.SpentAmount) ?? default;
+
+					//to filter Expenditure.SpentDate 0 - 7, 7 - 14, 14 - 21, 21 - BudgetDate (next month)
+					var totalExpendituresPerType = allExpenditures
+						?.Where(_ => _.SpentDate >= lowerBoundDateTime
+							&& _.SpentDate < upperBoundDateTime
+							&& _.ExpenditureTypeId == plannedExpenditureType.ExpenditureTypeId)
+						?.Sum(_ => _.SpentAmount)
+						?? default;
+
 					expenditures.Add(new ExpenditureDto()
 					{
 						Amount = new AmountDto()
@@ -102,6 +120,8 @@ namespace WeeklyBudget.Service
 				weeklyExpenditures.Add(new WeeklyExpenditureDto()
 				{
 					WeekDescription = $"week {week + 1}",
+					From = lowerBoundDateTime,
+					To = upperBoundDateTime,
 					Expenditures = expenditures,
 				});
 			}
@@ -111,24 +131,9 @@ namespace WeeklyBudget.Service
 		}
 
 		/// <summary>
-		/// Returns bool if some day belongs to some week 
-		/// </summary>
-		readonly Func<DateTime, int, bool> WeekIndex = (spentDay, week) =>
-		{
-			return week switch
-			{
-				0 => 1 <= spentDay.Day && spentDay.Day <= 7,
-				1 => 8 <= spentDay.Day && spentDay.Day <= 15,
-				2 => 16 <= spentDay.Day && spentDay.Day <= 23,
-				3 => 24 <= spentDay.Day,
-				_ => false,
-			};
-		};
-
-		/// <summary>
 		/// Creates Default budget for UI, the budget always consist from 4 weeks planned expenditures
 		/// </summary>
-		BudgetDto DefaultBudgetAsync(IEnumerable<ExpenditureType> expenditureTypes)
+		static BudgetDto DefaultBudgetAsync(IEnumerable<ExpenditureType> expenditureTypes)
 		{
 			var monthlyExpenditures = new List<ExpenditureDto>();
 			foreach (var expenditureType in expenditureTypes)
@@ -161,7 +166,8 @@ namespace WeeklyBudget.Service
 
 			return new BudgetDto()
 			{
-				BudgetDate = $"{AssignBudgetDate.Month}/{AssignBudgetDate.Year}",
+				BudgetDate = $"{SetDefaultBudgetDate().Month}/{SetDefaultBudgetDate().Year}",
+				SalaryDay = SetDefaultBudgetDate().Day,
 				MonthlyAmount = new AmountDto(),
 				MonthlyExpenditures = monthlyExpenditures,
 				WeeklyExpenditures = weekExpenditures,
@@ -186,7 +192,6 @@ namespace WeeklyBudget.Service
 			}
 			var defaultBudget = new Budget()
 			{
-				//BudgetDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, new Budget().SalaryDay),
 				BudgetDetails = budgetDetails,
 			};
 
@@ -200,7 +205,7 @@ namespace WeeklyBudget.Service
 		/// </summary>
 		public async Task<bool> UpdateAsync(decimal totalBudget)
 		{
-			var currentBudget = await _repositoryManager.Budgets.GetActualBudgetAsync() ?? await CreateDefaultBudgetAsync();
+			var currentBudget = await _repositoryManager.Budgets.GetActualBudgetAsync(deep: false) ?? await CreateDefaultBudgetAsync();
 			currentBudget!.TotalBudget = totalBudget;
 			return await _repositoryManager.Budgets.UpdateBudgetAsync(currentBudget);
 		}
@@ -211,7 +216,7 @@ namespace WeeklyBudget.Service
 		/// </summary>
 		public async Task<int> GetSalaryDateAsync()
 		{
-			var currentBudget = await _repositoryManager.Budgets.GetActualBudgetAsync() ?? await CreateDefaultBudgetAsync();
+			var currentBudget = await _repositoryManager.Budgets.GetActualBudgetAsync(deep: false) ?? await CreateDefaultBudgetAsync();
 			return currentBudget.BudgetDate.Day;
 		}
 
@@ -222,8 +227,9 @@ namespace WeeklyBudget.Service
 		/// <returns>True if update wase successful otherwise false</returns>
 		public async Task<bool> UpdateSalaryDayAsync(int salaryDay)
 		{
-			var currentBudget = await _repositoryManager.Budgets.GetActualBudgetAsync() ?? await CreateDefaultBudgetAsync();
-			currentBudget.BudgetDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, salaryDay);
+			//TODO-KS- check input salaryDay for the existing day in the current month!!!
+			var currentBudget = await _repositoryManager.Budgets.GetActualBudgetAsync(deep: false) ?? await CreateDefaultBudgetAsync();
+			currentBudget.BudgetDate = new DateTime(currentBudget.BudgetDate.Year, currentBudget.BudgetDate.Month, salaryDay);
 			return await _repositoryManager.Budgets.UpdateBudgetAsync(currentBudget);
 		}
 	}

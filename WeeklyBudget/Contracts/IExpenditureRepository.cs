@@ -7,7 +7,6 @@ namespace WeeklyBudget.Contracts
 		Task<IEnumerable<Expenditure>> GetAllAsync(DateTime dateTime);
 		Task<Expenditure?> GetByIdAsync(int id);
 		Task<bool> SaveAsync(Expenditure dto);
-		//Task<bool> UpdateAsync(Expenditure dto);
 		Task<bool> DeleteAsync(Expenditure dto);
 	}
 }
