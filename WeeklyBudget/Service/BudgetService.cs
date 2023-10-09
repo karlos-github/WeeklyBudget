@@ -7,10 +7,15 @@ namespace WeeklyBudget.Service
 	public class BudgetService : IBudgetService
 	{
 		const int _weeksPerMounth = 4;
+		const int _defaultSalaryDay = 15;
 		readonly IRepositoryManager _repositoryManager;
 
 		public BudgetService(IRepositoryManager repositoryManager) => _repositoryManager = repositoryManager;
 
+		DateTime AssignBudgetDate 
+			=> DateTime.Now.Date.Day < _defaultSalaryDay
+				? new DateTime(DateTime.Now.Year, DateTime.Now.Month, _defaultSalaryDay).AddMonths(-1)
+				: new DateTime(DateTime.Now.Year, DateTime.Now.Month, _defaultSalaryDay);
 
 
 		/// <summary>
@@ -26,7 +31,10 @@ namespace WeeklyBudget.Service
 			if (budget is null)
 			{
 				var budgetDetails = new List<BudgetDetail>();
-				budget = new Budget();
+				budget = new Budget()
+				{
+					BudgetDate = AssignBudgetDate
+				};
 				allExpenditureTypes?.ToList()?.ForEach(_ => { budgetDetails.Add(new BudgetDetail() { ExpenditureTypeId = _.ExpenditureTypeId, }); });
 				budget.BudgetDetails = budgetDetails;
 				await _repositoryManager.Budgets.CreateBudgetAsync(budget);
@@ -120,7 +128,7 @@ namespace WeeklyBudget.Service
 		/// <summary>
 		/// Creates Default budget for UI, the budget always consist from 4 weeks planned expenditures
 		/// </summary>
-		static BudgetDto DefaultBudgetAsync(IEnumerable<ExpenditureType> expenditureTypes)
+		BudgetDto DefaultBudgetAsync(IEnumerable<ExpenditureType> expenditureTypes)
 		{
 			var monthlyExpenditures = new List<ExpenditureDto>();
 			foreach (var expenditureType in expenditureTypes)
@@ -153,7 +161,7 @@ namespace WeeklyBudget.Service
 
 			return new BudgetDto()
 			{
-				BudgetDate = $"{DateTime.Now.Month}/{DateTime.Now.Year}",
+				BudgetDate = $"{AssignBudgetDate.Month}/{AssignBudgetDate.Year}",
 				MonthlyAmount = new AmountDto(),
 				MonthlyExpenditures = monthlyExpenditures,
 				WeeklyExpenditures = weekExpenditures,
@@ -178,7 +186,7 @@ namespace WeeklyBudget.Service
 			}
 			var defaultBudget = new Budget()
 			{
-				BudgetDate = DateTime.Now,
+				//BudgetDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, new Budget().SalaryDay),
 				BudgetDetails = budgetDetails,
 			};
 
@@ -194,6 +202,28 @@ namespace WeeklyBudget.Service
 		{
 			var currentBudget = await _repositoryManager.Budgets.GetActualBudgetAsync() ?? await CreateDefaultBudgetAsync();
 			currentBudget!.TotalBudget = totalBudget;
+			return await _repositoryManager.Budgets.UpdateBudgetAsync(currentBudget);
+		}
+
+		/// <summary>
+		/// Returns the day of the month when the user receives a salary. Is more or less constant value. Default value is 15th of each month.
+		/// The default value is used in case that a default budget is created.
+		/// </summary>
+		public async Task<int> GetSalaryDateAsync()
+		{
+			var currentBudget = await _repositoryManager.Budgets.GetActualBudgetAsync() ?? await CreateDefaultBudgetAsync();
+			return currentBudget.BudgetDate.Day;
+		}
+
+		/// <summary>
+		/// Updates the day when a user receives salary every month
+		/// </summary>
+		/// <param name="salaryDay">The day of a month</param>
+		/// <returns>True if update wase successful otherwise false</returns>
+		public async Task<bool> UpdateSalaryDayAsync(int salaryDay)
+		{
+			var currentBudget = await _repositoryManager.Budgets.GetActualBudgetAsync() ?? await CreateDefaultBudgetAsync();
+			currentBudget.BudgetDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, salaryDay);
 			return await _repositoryManager.Budgets.UpdateBudgetAsync(currentBudget);
 		}
 	}
