@@ -15,23 +15,39 @@ With the begining of a new month a new budget is created automatically.
 
 ### Budget Controller
 
-#### Get Current Budget
+#### GetActualBudget()  
+
 Gets the current budget. If there's no budget in database for corresponding the actual month a default budget will be created.
 ```http
   GET /api/Budget/get
 ```
 
-#### Get item
+#### Update(decimal totalBudget)
+Updates the current budget's TotalBudget value for the actual month. Default value is 0 CZK. User can update this default value by this endpoint.
 
 ```http
-  GET /api/items/${id}
+  PUT /api/Budget/update
 ```
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
+|   Parameter  | Type     | Description                       |
+| :--------    | :------- | :-------------------------------- |
+| `totalBudget`      | `double` | **Required**. Total monthly budget amount |
 
-#### add(num1, num2)
+#### GetSalaryDay()
+Returns the day of the month when the user receives a salary. Is more or less constant value althouhg each monthly budget can have different value. Default value is 15th of each month. The default value is also used in case that a default budget is created. 
 
-Takes two numbers and returns the sum.
+```http
+  GET /api/Budget/getSalaryDay
+```
+
+#### UpdateSalaryDay(int salaryDay)
+The day in the mounth when the user receives his/her salary. From this day monthly budget is calculated and followed.
+
+```http
+  PUT /api/Budget/updateSalaryDay
+```
+|   Parameter  | Type     | Description                       |
+| :--------    | :------- | :-------------------------------- |
+| `salaryDay`      | `int` | **Required**. Day of the month when salary is recieved |
+
 
