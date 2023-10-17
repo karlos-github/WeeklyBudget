@@ -28,8 +28,7 @@ namespace WeeklyBudget.Controllers
 		/// Deletes an existing expenditure type from database
 		/// </summary>
 		/// <param name="id">Expenditure type identification.</param>
-		[HttpDelete]
-		[Route("delete/{id}")]
+		[HttpDelete("delete/{id}")]
 		public async Task<IActionResult> Delete(int id) => Ok(await _expenditureTypeService.DeleteAsync(id));
 	}
 }

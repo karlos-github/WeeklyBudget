@@ -29,8 +29,7 @@ namespace WeeklyBudget.Controllers
 		/// Deletes expenditure saved to database.
 		/// </summary>
 		/// <param name="id">Specifies expenditure record to be deleted from database</param>
-		[HttpDelete]
-		[Route("delete/{id}")]
+		[HttpDelete("delete/{id}")]
 		public async Task<IActionResult> Delete(int id) => Ok(await _expenditureService.DeleteAsync(id));
 	}
 }
