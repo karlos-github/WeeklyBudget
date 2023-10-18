@@ -35,8 +35,9 @@ namespace WeeklyBudget
 					" the month. User can also check expences that were count in each expence types. With the begining of a new month a new budget is created automatically.",					
 					Contact = new OpenApiContact
 					{
-						Name = "Link to API hosting",
-						Url = new Uri("http://skrabal.aspifyhost.cz/"),
+						//TODO-KS- hosting not ready yet
+						//Name = "Link to API hosting",
+						//Url = new Uri("http://skrabal.aspifyhost.cz/"),
 						Email = "karel.skrabal@seznam.cz"
 					},
 				});
