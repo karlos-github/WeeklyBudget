@@ -1,14 +1,13 @@
 
 # Monthly Budget API
 
-An ASP.NET Core Web API for managing monthly expences. Application is designed to help follow monthly expenses and by this way save down money. 
+An ASP.NET Core Web API for managing monthly expenses. The application is designed to help users track their monthly spending and save money.
 
-The user can set some typical types of expences (for example like Food, Petrol, Rent, ...) and planned amount of money assumed to by spent for each expence type during the  month. Planned amount of money for each expense type is devided in a 4 week budgets, so the user can more easily follow his/her expences on week bases. 
+Users can define common expense categories (e.g., Food, Petrol, Rent, etc.) and set a planned budget for each category for the month. The planned budget for each expense type is divided into four weekly budgets, making it easier for users to monitor their spending on a weekly basis.
 
-User writes down his/her expences during the month. The user can follow how much has already spent for each expence type and how much is left to spent for actual month or week of the month. User can also check expences that were count in each expence types. 
+Throughout the month, users record their expenses. They can then see how much has already been spent in each category and how much remains for the current month or week. Users can also review the detailed expenses recorded under each category.
 
-With the begining of a new month a new budget is created automatically.
-
+At the beginning of each new month, a new budget is created automatically.
 
 
 ## API Reference
