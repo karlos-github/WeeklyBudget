@@ -16,13 +16,13 @@ At the beginning of each new month, a new budget is created automatically.
 
 #### Get Current Budget 
 
-This endpoint returns the current budget. If there's no budget existing in database for the corresponding current month than a default budget will be created. The default budget is created with total amount of money set to 0 CZK. All existing expenditure types are set in the default budget with 0 CZK amount of money.
+This endpoint returns the current budget. If no budget exists in the database for the current month, a default budget is created. The default budget has a total amount of 0 CZK, and all existing expense categories are included with their amounts set to 0 CZK.
 ```http
   GET /api/Budget/get
 ```
 
 #### Update total budget amount of money
-This endpoint updates the current budget's TotalBudget value for the actual month. Default value is 0 CZK.
+This endpoint updates the TotalBudget value of the current month’s budget. The default value is 0 CZK.
 
 ```http
   PUT /api/Budget/update
@@ -33,14 +33,18 @@ This endpoint updates the current budget's TotalBudget value for the actual mont
 | `totalBudget`      | `double` | **Required**. Total monthly budget amount |
 
 #### Get salary day
-Returns the day of the month when the user receives a salary. From this day to the same day next month budget expenditures are calculated on monthly or weekly bases. Is more or less constant value althouhg each monthly budget can have different value. Default value is 15th of each month. The default value is also used in case that a default budget is created. 
+This endpoint returns the day of the month when the user receives their salary. Budget expenditures are calculated from this day until the same day of the following month, either on a monthly or weekly basis.
+
+The salary day is generally a fixed value, although each monthly budget can have a different one. By default, it is set to the 15th of each month. This default value is also applied when a default budget is created.
 
 ```http
   GET /api/Budget/getSalaryDay
 ```
 
 #### Update salary day
-This endpoint is used to change the day from which the current monthly budget will be calculated and followed to the same day next month when the current budget ends. The salary day is the day when the user receives his/her salary.
+This endpoint changes the day from which the current monthly budget is calculated. The budget then runs until the same day of the following month, when it ends.
+
+The salary day represents the day the user receives their salary.
 
 ```http
   PUT /api/Budget/updateSalaryDay
@@ -53,7 +57,11 @@ This endpoint is used to change the day from which the current monthly budget wi
 ### Budget Detail Controller
 
 #### Get all budget details
-Gets all BudgetDetails for the current budget. A BudgetDetail serves as a blue-print how much the user is planning to spent for some specific expenditure type. If the current budget was created as a default one, for each expenditure type a budget detail is created with default TotalBudget amount value. Based on TotalBudget amount value and expenditures saved to database is calculated how much user can still spent on monthly or weekly bases.
+This endpoint retrieves all BudgetDetails for the current budget. A BudgetDetail acts as a blueprint for how much the user plans to spend on a specific expense category.
+
+If the current budget was created as a default one, a budget detail is generated for each expense category with the TotalBudget amount set to the default value.
+
+Based on the TotalBudget value and the expenditures stored in the database, the system calculates how much the user can still spend on a monthly or weekly basis.
 
 ```http
   GET /api/BudgetDetail/getAll
@@ -73,7 +81,9 @@ This endpoint updates how much user is planning to spent for the certain expendi
 ### Expenditure Controller
 
 #### Get all expenditures
-Gets all expenditures that user saved to database so far for the current month. The current budget starts from the salary day of the current month to the same day next month. All expenditures saved to dabase for this time period and assigned with the certain expenditure type that corresponds with expenditure type used in budget details of the current monthly budget are included in the current month expenditures.
+This endpoint retrieves all expenditures saved by the user for the current month. The current budget runs from the salary day of the current month until the same day of the following month.
+
+All expenditures recorded in the database during this period, and assigned to an expense category that matches one defined in the budget details of the current monthly budget, are included in the results.
 
 ```http
   GET /api/Expenditure/getAll
@@ -101,13 +111,15 @@ This endpoint deletes the existing expenditure.
 | `id` | `int` | **Required**. Type of expenditure |
 
 #### Get all expenditures types
-Gets all expenditures types that user saved to database. The ependiture type represents a certain type of expenditure that user plans to follow in the monthly budget.
+This endpoint retrieves all expenditure types saved by the user in the database. An expenditure type represents a specific category of spending that the user wants to track in the monthly budget.
 
 ```http
   GET /api/ExpenditureType/getAll
 ```
 #### Save a new expenditure type
-This endpoint saves a new expenditure type. All existing expenditures are automatically used in the monthly budget. The monthly budget contains several budget details. Each budget detail holds only one expenditure type and defines a total budget amount value for this expenditure type that user plans to spent for the current budget.
+This endpoint saves a new expenditure type. All expenditure types are automatically included in the monthly budget.
+
+A monthly budget consists of several budget details, each linked to a single expenditure type. A budget detail defines the TotalBudget amount that the user plans to spend for that expenditure type in the current budget.
 
 ```http
   POST /api/ExpenditureType/save/{expenditureType}
@@ -117,7 +129,7 @@ This endpoint saves a new expenditure type. All existing expenditures are automa
 | `expenditureType` | `string` | **Required**. Description of expenditure type |
 
 #### Delete expenditure type
-This endpoint deletes the existing expenditure type.
+This endpoint deletes an existing expenditure type.
 
 ```http
   DELETE /api/ExpenditureType/delete/{id}
